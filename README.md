@@ -1,73 +1,67 @@
-# RAKER ADH Nasional 2026 — Registration Portal
+# RAKER ADH Nasional 2026 — Registration
 
-Next.js event registration portal based on the supplied RAKER ADH Nasional 2026 poster direction.
+Next.js registration portal with a premium black/yellow visual system based on the supplied event posters.
 
-## Flow
+## NPK / Attendance flow
 
-1. Participant opens the registration page.
-2. Participant enters an NPK that must be **exactly 6 numeric digits**.
-3. Next.js validates the NPK server-side through the Google Apps Script Web App.
-4. If the participant exists, the page unlocks an animated, scrollable rundown.
-5. The rundown can expose a PDF download link returned by Apps Script.
+1. The participant enters an NPK in the browser.
+2. The browser accepts only exactly 6 numeric digits.
+3. Next.js sends the NPK to Google Apps Script through `/api/registration`.
+4. Google Apps Script searches the official Google Sheet `Attendees` tab.
+5. If the NPK exists, Apps Script writes `status_hadir = 1` to that participant row.
+6. Apps Script returns the participant data and the rundown.
+7. Next.js unlocks the animated rundown page.
 
-## Tech
+**There is no Excel participant database in the browser. Google Sheets is the single source of truth.**
 
-- Next.js 15.5.9
-- React 19
-- TypeScript
-- Lucide icons
-- CSS-only visual system, no Tailwind dependency
-- Google Sheets + Apps Script as the source of truth
-- Next.js server route used as a proxy to avoid browser CORS issues
+## Google Sheets structure
 
-## Google Sheet structure
+### Attendees
 
-### Sheet: `Attendees`
+Required columns:
 
-| NPK | Name | Branch | Position | Status |
-|---|---|---|---|---|
-| 123456 | Albert Tanaputra | Jakarta | Supervisor | REGISTERED |
+`NPK | Name | Branch | Position | status_hadir`
 
-NPK is treated as text in Apps Script so leading zeroes are preserved.
+NPK should be stored as text or in a format that preserves leading zeroes. The app requires exactly 6 digits.
 
-### Sheet: `Rundown`
+### Rundown
 
-| Time | Activity | Type |
-|---|---|---|
-| 08.30 – 08.35 | Indonesia Raya | Opening |
-| 08.35 – 08.40 | Mars Maybank & Maybank Finance | Opening |
+Required columns:
 
-### Sheet: `Settings` (optional)
+`Time | Activity | Type`
 
-| Key | Value |
-|---|---|
-| PDF_URL | https://.../rundown.pdf |
+### Settings
 
-If `Settings` is not used, set `NEXT_PUBLIC_PDF_URL` in the server environment.
+Optional columns:
 
-## Apps Script
+`Key | Value`
 
-Open `appscript/Code.gs`, update `SPREADSHEET_ID`, then deploy it as a Web App:
+Add `PDF_URL` to control the rundown download link without changing the Next.js code.
 
-- Execute as: **Me**
-- Who has access: **Anyone** (or the appropriate access setting for your organization)
+## Google Apps Script
 
-Copy the Web App `/exec` URL into `.env.local`:
+1. Open the Google Sheet.
+2. Extensions → Apps Script.
+3. Copy `appscript/Code.gs`.
+4. Set `SPREADSHEET_ID`.
+5. Deploy → New deployment → Web app.
+6. Execute as the spreadsheet owner.
+7. Set access according to your organization's requirements.
+8. Put the `/exec` URL into `.env.local` as `APPS_SCRIPT_URL`.
 
-```env
-APPS_SCRIPT_URL=https://script.google.com/macros/s/DEPLOYMENT_ID/exec
-NEXT_PUBLIC_PDF_URL=https://example.com/rundown.pdf
-```
-
-## Run locally
+## Next.js
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-Then open `http://localhost:3000`.
+`.env.local`:
 
-## Deploy to Vercel
+```env
+APPS_SCRIPT_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+NEXT_PUBLIC_PDF_URL=https://example.com/rundown.pdf
+```
 
-Set the same environment variables in Vercel Project Settings and deploy.
+`NEXT_PUBLIC_PDF_URL` is only a fallback. Prefer the `PDF_URL` value from the `Settings` sheet.
