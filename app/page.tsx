@@ -155,16 +155,15 @@ export default function Home() {
       <main className="app-shell rundown-shell">
         <div className="rundown-bg" />
         <header className="rundown-header">
-          <button className="icon-button" onClick={reset} aria-label="Back to NPK validation">
-            <ArrowLeft size={20} />
-          </button>
-          <div className="brand-mini">
-            <span>RAKER ADH</span>
-            <b>NASIONAL 2026</b>
+          <img className="brand-logo header-brand-logo" src="/maybank-finance-logo.jpg" alt="Maybank Finance" />
+          <div className="rundown-header-actions">
+            <button className="icon-button" onClick={reset} aria-label="Back to NPK validation">
+              <ArrowLeft size={20} />
+            </button>
+            <button className="icon-button" onClick={() => setShowInfo(true)} aria-label="Event info">
+              <span>i</span>
+            </button>
           </div>
-          <button className="icon-button" onClick={() => setShowInfo(true)} aria-label="Event info">
-            <span>i</span>
-          </button>
         </header>
 
         <section className="welcome-panel">
@@ -230,8 +229,6 @@ export default function Home() {
         </section>
 
         <footer className="site-footer">
-          <img className="brand-logo footer-brand-logo" src="/maybank-finance-logo.jpg" alt="Maybank Finance" />
-          <p>Humanising Financial Services</p>
           <small>PT Maybank Indonesia Finance berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK).</small>
         </footer>
 

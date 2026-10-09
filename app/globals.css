@@ -62,10 +62,9 @@ a { color: inherit; }
 .rundown-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at 50% 0%, rgba(255,196,0,.1), transparent 32%), linear-gradient(180deg, rgba(5,5,5,.1), #070707 35%), url('/poster-event.png') center top / cover no-repeat; opacity: .16; filter: grayscale(.5); }
 .rundown-header, .welcome-panel, .event-facts, .rundown-section, .download-card, .site-footer { width: min(980px, calc(100% - 40px)); margin-inline: auto; position: relative; z-index: 1; }
 .rundown-header { padding-top: 22px; display: flex; align-items: center; justify-content: space-between; }
+.rundown-header-actions { display: flex; align-items: center; gap: 10px; }
 .icon-button { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.05); color: #fff; border: 1px solid rgba(255,255,255,.12); display: grid; place-items: center; }
 .icon-button span { width: 18px; height: 18px; border: 1px solid #aaa; border-radius: 50%; display: grid; place-items: center; font-size: 11px; }
-.brand-mini { text-align: center; line-height: .95; font-family: 'Manrope'; font-size: 10px; letter-spacing: .13em; color: #cfcfcf; }
-.brand-mini b { display: block; font-size: 15px; color: var(--yellow); letter-spacing: -.02em; margin-top: 4px; }
 .welcome-panel { padding: 75px 0 25px; }
 .welcome-panel h1 { font-family: 'Manrope'; font-size: clamp(42px, 7vw, 76px); line-height: .98; letter-spacing: -.06em; margin: 14px 0 12px; }
 .welcome-panel h1 span { color: var(--yellow); }
