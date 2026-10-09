@@ -24,7 +24,8 @@ type Attendee = {
   name: string;
   branch?: string;
   position?: string;
-  status?: string;
+  timeLog?: string;
+  hadir?: string;
 };
 
 type RundownItem = {
@@ -41,29 +42,32 @@ type ApiResult = {
   pdfUrl?: string;
 };
 
+const OFFICIAL_PDF_URL = "/Raker-ADH-2026-09102026.pdf";
+
 const FALLBACK_RUNDOWN: RundownItem[] = [
   { time: "08.30 – 08.35", activity: "Indonesia Raya", type: "Opening" },
   { time: "08.35 – 08.40", activity: "Mars Maybank & Maybank Finance", type: "Opening" },
   { time: "08.40 – 08.50", activity: "Welcoming Speech dari Direksi", type: "Speech" },
   { time: "08.50 – 09.00", activity: "Welcoming Speech dari Kadiv / Dept Head", type: "Speech" },
-  { time: "09.00 – 09.30", activity: "Presentasi 1 – Department Accounting", type: "Presentation" },
-  { time: "09.30 – 10.00", activity: "Presentasi 2 – Department HC & GA", type: "Presentation" },
-  { time: "10.00 – 10.30", activity: "Coffee Break", type: "Break" },
-  { time: "10.30 – 11.00", activity: "Presentasi 3 – Department IC", type: "Presentation" },
-  { time: "11.00 – 11.30", activity: "Presentasi 4 – Department Audit", type: "Presentation" },
-  { time: "11.30 – 12.00", activity: "Presentasi 5 – Department Risk", type: "Presentation" },
+  { time: "09.00 – 09.30", activity: "Presentasi 1 – Department Audit", type: "Presentation" },
+  { time: "09.30 – 10.00", activity: "Presentasi 2 – Department IC", type: "Presentation" },
+  { time: "10.00 – 10.15", activity: "Coffee Break", type: "Break" },
+  { time: "10.15 – 10.45", activity: "Presentasi 3 – Department Risk", type: "Presentation" },
+  { time: "10.45 – 11.15", activity: "Presentasi 4 – Department HC & GA", type: "Presentation" },
+  { time: "11.15 – 12.00", activity: "Presentasi 5 – Department Legal", type: "Presentation" },
   { time: "12.00 – 13.00", activity: "Lunch Break", type: "Break" },
-  { time: "13.00 – 13.15", activity: "Presentasi 6 – Department Operation (CS & CC)", type: "Presentation" },
-  { time: "13.15 – 14.00", activity: "Discussion Session 1", type: "Discussion" },
-  { time: "14.00 – 14.15", activity: "Presentasi 7 – Department Operation (SOP)", type: "Presentation" },
-  { time: "14.15 – 15.00", activity: "Discussion Session 2", type: "Discussion" },
+  { time: "13.00 – 14.00", activity: "Discussion Together", type: "Discussion" },
+  { time: "14.00 – 14.15", activity: "Presentasi 6 – Department Operation (CS & CC)", type: "Presentation" },
+  { time: "14.15 – 14.45", activity: "Discussion Session 1", type: "Discussion" },
+  { time: "14.45 – 15.00", activity: "Presentasi 7 – Department Operation (SOP)", type: "Presentation" },
   { time: "15.00 – 15.30", activity: "Coffee Break", type: "Break" },
-  { time: "15.30 – 15.45", activity: "Presentasi 8 – Department Operation (BPKB)", type: "Presentation" },
-  { time: "15.45 – 16.30", activity: "Discussion Session 3", type: "Discussion" },
+  { time: "15.30 – 15.45", activity: "Discussion Session 2", type: "Discussion" },
+  { time: "15.45 – 16.15", activity: "Presentasi 8 – Department Operation (BPKB)", type: "Presentation" },
+  { time: "16.15 – 16.30", activity: "Discussion Session 3", type: "Discussion" },
   { time: "16.30 – 16.45", activity: "Presentasi 9 – Department Operation (Kasir)", type: "Presentation" },
-  { time: "16.45 – 17.30", activity: "Discussion Session 4", type: "Discussion" },
-  { time: "17.30 – 17.45", activity: "Closing + Photo session", type: "Closing" },
-  { time: "17.45 – 18.30", activity: "Preparation to Dinner", type: "Dinner" },
+  { time: "16.45 – 17.15", activity: "Discussion Session 4", type: "Discussion" },
+  { time: "17.15 – 17.30", activity: "Closing + Photo session", type: "Closing" },
+  { time: "17.30 – 18.30", activity: "Preparation to Dinner", type: "Dinner" },
   { time: "18.30 – 21.00", activity: "Employee Engagement Dinner + Photo session", type: "Dinner" },
 ];
 
@@ -108,20 +112,25 @@ export default function Home() {
       setError("NPK harus tepat 6 digit angka.");
       return;
     }
+
     setLoading(true);
     try {
-      const response = await fetch("/api/registration", {
+      // NPK is matched against the official Google Sheets participant database
+      // through the Next.js server route and Google Apps Script.
+      // Apps Script writes status_hadir = 1 when the NPK is valid.
+      const checkinResponse = await fetch("/api/registration", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ npk }),
+        body: JSON.stringify({ npk, action: "checkin" }),
       });
-      const data: ApiResult = await response.json();
-      if (!response.ok || !data.ok) {
-        throw new Error(data.message || "NPK tidak ditemukan.");
+      const data: ApiResult = await checkinResponse.json();
+      if (!checkinResponse.ok || !data.ok) {
+        throw new Error(data.message || "NPK valid, tetapi status kehadiran gagal disimpan.");
       }
+
       setAttendee(data.attendee || null);
       setRundown(data.rundown?.length ? data.rundown : FALLBACK_RUNDOWN);
-      setPdfUrl(data.pdfUrl || "");
+      setPdfUrl(OFFICIAL_PDF_URL);
       setStep("rundown");
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -210,7 +219,7 @@ export default function Home() {
             <p>Save the official PDF for quick access during the event.</p>
           </div>
           {pdfUrl ? (
-            <a className="download-button" href={pdfUrl} target="_blank" rel="noreferrer">
+            <a className="download-button" href={OFFICIAL_PDF_URL} download="Raker-ADH-2026-09102026.pdf">
               Download <ArrowRight size={17} />
             </a>
           ) : (
@@ -221,7 +230,7 @@ export default function Home() {
         </section>
 
         <footer className="site-footer">
-          <div className="footer-logo">MAYBANK <span>Finance</span></div>
+          <img className="brand-logo footer-brand-logo" src="/maybank-finance-logo.jpg" alt="Maybank Finance" />
           <p>Humanising Financial Services</p>
           <small>PT Maybank Indonesia Finance berizin dan diawasi oleh Otoritas Jasa Keuangan (OJK).</small>
         </footer>
@@ -248,7 +257,7 @@ export default function Home() {
       <div className="grain" />
 
       <header className="gate-header">
-        <div className="wordmark">MAYBANK <span>Finance</span></div>
+        <img className="brand-logo header-brand-logo" src="/maybank-finance-logo.jpg" alt="Maybank Finance" />
         <button className="info-link" onClick={() => setShowInfo(true)}>Event Info <ChevronDown size={15} /></button>
       </header>
 
@@ -281,7 +290,7 @@ export default function Home() {
             />
             <span className="digit-count">{npk.length}/6</span>
           </div>
-          <div className="input-hint">Only numbers are accepted. Exactly 6 digits.</div>
+          <div className="input-hint">Only numbers are accepted. Exactly 6 digits. Participant data is verified against the official event database.</div>
           {error && <div className="error-message">{error}</div>}
           <button className="enter-button" type="submit" disabled={!npkValid || loading}>
             {loading ? <><LoaderCircle className="spin" size={18} /> Checking...</> : <><TicketCheck size={18} /> Check Registration <ArrowRight size={18} /></>}

@@ -26,3 +26,13 @@ Then deploy this project to Vercel.
 
 ## 4. Check-in behavior
 Input must be exactly 6 digits. A valid NPK immediately performs the attendance write and opens the animated rundown. No separate Check In button is required.
+
+
+### Official event PDF and branding
+
+The uploaded Maybank Finance logo is served from `public/maybank-finance-logo.jpg`. The Download button uses the bundled official PDF at `public/Raker-ADH-2026-09102026.pdf`; it no longer depends on the `PDF_URL` setting in Google Sheets. Replace that file and rebuild/redeploy if the PDF changes.
+
+
+## Updated rundown (9 October 2026)
+
+The fallback rundown in `app/page.tsx` has been updated to match the latest rundown supplied by the user. The live website reads the `Rundown` tab from Google Sheets when it contains rows, so also replace that tab's data with `google-sheets/Rundown-Updated.csv` (columns: `Time`, `Activity`, `Type`) to make the updated schedule appear live. Keep the header row and import/paste the 24 schedule rows beneath it.
