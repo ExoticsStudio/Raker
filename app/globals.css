@@ -20,8 +20,8 @@ a { color: inherit; }
 
 .app-shell { min-height: 100svh; overflow-x: hidden; position: relative; }
 .gate-shell { display: flex; flex-direction: column; justify-content: space-between; isolation: isolate; }
-.hero-image { position: fixed; inset: 0; background: url('/poster-event.png') center / cover no-repeat; filter: saturate(.82) contrast(1.05); z-index: -3; transform: scale(1.01); }
-.hero-overlay { position: fixed; inset: 0; z-index: -2; background: linear-gradient(180deg, rgba(0,0,0,.66) 0%, rgba(0,0,0,.36) 32%, rgba(0,0,0,.74) 100%); }
+.hero-image { position: fixed; inset: 0; background: url('/indonesia-map-background.png') center / cover no-repeat; filter: saturate(.9) contrast(1.04); z-index: -3; transform: scale(1.01); }
+.hero-overlay { position: fixed; inset: 0; z-index: -2; background: linear-gradient(180deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,.20) 32%, rgba(0,0,0,.52) 100%); }
 .grain { position: fixed; inset: 0; z-index: -1; opacity: .09; pointer-events: none; background-image: radial-gradient(rgba(255,255,255,.9) .5px, transparent .5px); background-size: 5px 5px; mix-blend-mode: soft-light; }
 
 .gate-header, .gate-footer { width: min(1180px, calc(100% - 48px)); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 2; }
@@ -59,7 +59,7 @@ a { color: inherit; }
 .gate-footer { padding: 0 0 25px; color: rgba(255,255,255,.5); font-size: 9px; letter-spacing: .12em; gap: 15px; }
 
 .rundown-shell { background: #070707; }
-.rundown-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at 50% 0%, rgba(255,196,0,.1), transparent 32%), linear-gradient(180deg, rgba(5,5,5,.1), #070707 35%), url('/poster-event.png') center top / cover no-repeat; opacity: .16; filter: grayscale(.5); }
+.rundown-bg { position: fixed; inset: 0; z-index: 0; background: radial-gradient(circle at 50% 0%, rgba(255,196,0,.08), transparent 32%), linear-gradient(180deg, rgba(5,5,5,.28), rgba(7,7,7,.58) 100%), url('/indonesia-map-background.png') center top / cover no-repeat; opacity: .82; filter: saturate(.78); }
 .rundown-header, .welcome-panel, .event-facts, .rundown-section, .download-card, .site-footer { width: min(980px, calc(100% - 40px)); margin-inline: auto; position: relative; z-index: 1; }
 .rundown-header { padding-top: 22px; display: flex; align-items: center; justify-content: space-between; }
 .rundown-header-actions { display: flex; align-items: center; gap: 10px; }
