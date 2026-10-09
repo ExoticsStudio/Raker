@@ -121,7 +121,19 @@ a { color: inherit; }
 
 @media (max-width: 720px) {
   .gate-header, .gate-footer, .gate-content, .rundown-header, .welcome-panel, .event-facts, .rundown-section, .download-card, .site-footer { width: min(100% - 28px, 980px); }
-  .hero-image { background-position: 60% center; }
+  /* Mobile-only cinematic background; keep the desktop background unchanged. */
+  .hero-image {
+    background-image: url('/mobile-golden-archipelago.png');
+    background-position: center center;
+    background-size: cover;
+    opacity: .2;
+  }
+  .rundown-bg {
+    background-image: linear-gradient(180deg, rgba(5,5,5,.28), rgba(7,7,7,.58) 100%), url('/mobile-golden-archipelago.png');
+    background-position: center top;
+    background-size: cover;
+    opacity: .2;
+  }
   .gate-header { padding-top: 18px; }
   .gate-content { padding-top: 70px; }
   .gate-content h1 { font-size: clamp(48px, 15vw, 75px); }
